@@ -7,7 +7,7 @@ ENV FASTDFS_LIBCOMMON https://github.com/happyfish100/libfastcommon/archive/V1.0
 ENV FASTDFS_PATH /usr/local/fastdfs
 ENV FASTDFS_PACKAGE_PATH /usr/local/package/libfastcommon
 ENV BIN_PATH /docker/bin
-ENV BIN_FILE docker_entrypoint.sh
+ENV BIN_FILE docker-entrypoint.sh
 
 RUN yum update -y
 
@@ -29,7 +29,7 @@ RUN yum install -y gcc make wget net-tools \
 	&& ./make.sh install \
 	&& mkdir -p $BIN_PATH
 
-Copy docker_entrypoint.sh /docker/bin
+Copy docker-entrypoint.sh /docker/bin
 
 RUN ln -s  $BIN_PATH/$BIN_FILE /usr/local/bin
 
