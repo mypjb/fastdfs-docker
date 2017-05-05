@@ -34,7 +34,7 @@ ENV NGINX_DEPEND pcre-devel \
 #nginx install confiure
 ENV NGINX_CONFIGURE --with-stream \
 		    --with-http_image_filter_module \
-	            --add-module=/usr/local/nginx/moduels/fastdfs/src
+	            --add-module=/usr/local/nginx/modules/fastdfs/src
 
 
 RUN  yum update -y \
@@ -66,8 +66,7 @@ RUN echo "begin install fastdfs" \
 RUN echo "pull fastdfs config" \
 	&& mkdir fastdfs_git \
 	&& git clone $FASTDFS_CONFIG_GIT fastdfs_git \
-	&& rm -rf conf \
-	&& mv fastdfs_git/conf conf \
+	&& cp fastdfs_git/conf/* $FASTDFS_PATH/conf \
         && mkdir -p $	$NGINX_PATH/moduels/fastdfs \
         && git clone $FASTDFS_NGINX_GIT	$NGINX_PATH/modules/fastdfs \
 	&& cp fastdfs_git/fastdfs-nginx-module/* $NGINX_PATH/modules/fastdfs/src \
@@ -87,10 +86,12 @@ RUN echo "begin nginx" \
 	&& make install \
 	&& ln -s $NGINX_PATH/sbin/nginx /usr/local/bin	
 	
+RUN mkdir -p /storage/fastdfs
 
-ENTRYPOINT ["nginx"]
+ENTRYPOINT nginx ; fdfs_storaged /usr/local/fastdfs/conf/storage.conf  ; /bin/bash
 
-EXPOSE  23000 22122
+EXPOSE  23000 22122 80
 
-CMD ["fdfs_storaged","/usr/local/fastdfs/conf/storage.conf"]
+#CMD sh -c "top";
+#CMD /bin/bash
 
