@@ -2,6 +2,9 @@ FROM centos
 
 MAINTAINER mypjb/fastdfs docker maintainer 280417314@qq.com
 
+#TRACKER_ENABLE equal 1 meanwhile tracker or else only start storage
+ENV TRACKER_ENABLE 0
+
 #fastdfs cofnig git
 ENV FASTDFS_CONFIG_GIT=https://github.com/mypjb/fastdfs-docker.git
 
@@ -10,10 +13,13 @@ ENV FASTDFS_NGINX_GIT=https://github.com/happyfish100/fastdfs-nginx-module.git
 
 #fastdfs url
 ENV FASTDFS_URL https://github.com/happyfish100/fastdfs/archive/V5.10.tar.gz
+
 # fastdfs lib
 ENV FASTDFS_LIBCOMMON https://github.com/happyfish100/libfastcommon/archive/V1.0.35.tar.gz
+
 # fastdfs path
 ENV FASTDFS_PATH /usr/local/fastdfs
+
 # fastdfs lib path
 ENV FASTDFS_PACKAGE_PATH /usr/local/package/libfastcommon
 
@@ -89,8 +95,6 @@ RUN echo "begin nginx" \
 RUN mkdir -p /storage/fastdfs
 
 EXPOSE 23000 22122 80
-
-ENV TRACKER_ENABLE 0
 
 CMD nginx ; \
 	if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
