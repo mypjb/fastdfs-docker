@@ -5,6 +5,9 @@ MAINTAINER mypjb/fastdfs docker maintainer 280417314@qq.com
 #TRACKER_ENABLE equal 1 meanwhile tracker or else only start storage
 ENV TRACKER_ENABLE 0
 
+#default nginx port
+ENV NGINX_PORT 80
+
 #fastdfs cofnig git
 ENV FASTDFS_CONFIG_GIT=https://github.com/mypjb/fastdfs-docker.git
 
@@ -76,6 +79,9 @@ RUN echo "pull fastdfs config" \
         && mkdir -p $	$NGINX_PATH/moduels/fastdfs \
         && git clone $FASTDFS_NGINX_GIT	$NGINX_PATH/modules/fastdfs \
 	&& cp fastdfs_git/fastdfs-nginx-module/* $NGINX_PATH/modules/fastdfs/src \
+	&& mkdir -p $NGINX_PATH/conf \
+	&& mkdir -p /storage/nginx/picture \
+	&& cp fastdfs_git/nginx_conf/* $NGINX_PATH/conf \
  	&& rm -rf fastdfs_git
 
 
@@ -96,7 +102,8 @@ RUN mkdir -p /storage/fastdfs
 
 EXPOSE 23000 22122 80
 
-CMD nginx ; \
-	if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
-	fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
-	/bin/bash
+CMD	set -i 's/\$NGINX_PORT/$NGINX_PORT/' $NGINX_PATH/conf/nginx.conf \
+	&& nginx ; \
+	&& if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
+	&& fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
+	&& /bin/bash
