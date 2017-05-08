@@ -76,7 +76,7 @@ RUN echo "pull fastdfs config" \
 	&& mkdir fastdfs_git \
 	&& git clone $FASTDFS_CONFIG_GIT fastdfs_git \
 	&& cp fastdfs_git/conf/* $FASTDFS_PATH/conf \
-        && mkdir -p $	$NGINX_PATH/moduels/fastdfs \
+        && mkdir -p $	$NGINX_PATH/modules/fastdfs \
         && git clone $FASTDFS_NGINX_GIT	$NGINX_PATH/modules/fastdfs \
 	&& cp fastdfs_git/fastdfs-nginx-module/* $NGINX_PATH/modules/fastdfs/src \
 	&& mkdir -p $NGINX_PATH/conf \
@@ -101,8 +101,8 @@ RUN echo "begin nginx" \
 RUN mkdir -p /storage/fastdfs
 
 EXPOSE 23000 22122 80
-
-CMD	set -i 's/\$NGINX_PORT/$NGINX_PORT/' $NGINX_PATH/conf/nginx.conf \
+       
+CMD	sed -i "s/\$NGINX_PORT/$NGINX_PORT/" $NGINX_PATH/conf/nginx.conf ; \
 	nginx ; \
 	if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
 	fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
