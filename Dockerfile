@@ -103,7 +103,7 @@ RUN mkdir -p /storage/fastdfs
 EXPOSE 23000 22122 80
 
 CMD	set -i 's/\$NGINX_PORT/$NGINX_PORT/' $NGINX_PATH/conf/nginx.conf \
-	&& nginx ; \
-	&& if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
-	&& fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
-	&& /bin/bash
+	nginx ; \
+	if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
+	fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
+	/bin/bash
