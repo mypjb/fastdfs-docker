@@ -88,10 +88,11 @@ RUN echo "begin nginx" \
 	
 RUN mkdir -p /storage/fastdfs
 
-ENTRYPOINT nginx ; fdfs_storaged /usr/local/fastdfs/conf/storage.conf  ; /bin/bash
+EXPOSE 23000 22122 80
 
-EXPOSE  23000 22122 80
+ENV TRACKER_ENABLE 0
 
-#CMD sh -c "top";
-#CMD /bin/bash
-
+CMD nginx ; \
+	if test $TRACKER_ENABLE -eq 1 ; then fdfs_trackerd $FASTDFS_PATH/conf/tracker.conf ;  fi ; \
+	fdfs_storaged $FASTDFS_PATH/conf/storage.conf  ; \
+	/bin/bash
