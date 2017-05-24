@@ -72,7 +72,7 @@ RUN echo "begin install fastdfs" \
 	&& echo "end install fastdfs"
 
 #pull config
-RUN echo "pull fastdfs config" \
+RUN echo "pull fastdfs config " \
 	&& mkdir fastdfs_git \
 	&& git clone $FASTDFS_CONFIG_GIT fastdfs_git \
 	&& cp fastdfs_git/conf/* $FASTDFS_PATH/conf \
