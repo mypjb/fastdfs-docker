@@ -100,7 +100,7 @@ RUN echo "begin nginx" \
 	
 RUN mkdir -p /storage/fastdfs
 
-EXPOSE 23000 22122 80
+EXPOSE 12041 12050 80
        
 CMD	sed -i "s/\$NGINX_PORT/$NGINX_PORT/" $NGINX_PATH/conf/nginx.conf ; \
 	nginx ; \
