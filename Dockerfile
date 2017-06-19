@@ -84,6 +84,7 @@ RUN echo "pull fastdfs config " \
 	&& cp fastdfs_git/nginx_conf/* $NGINX_PATH/conf \
  	&& rm -rf fastdfs_git
 
+ENV NGINX_IMAGE_MODULE https://github.com/intaro/nginx-image-filter-watermark.git
 
 #install nginx
 RUN echo "begin nginx" \
@@ -92,6 +93,8 @@ RUN echo "begin nginx" \
 	&& mkdir -p $NGINX_PACKAGE_PATH \
 	&& tar -xzvf nginx.tar.gz -C $NGINX_PACKAGE_PATH --strip-components=1 \
 	&& rm -rf nginx.tar.gz \
+	&& git clone $NGINX_IMAGE_MODULE nginx_image_module_git \
+	&& cp -f nginx_image_module_git/ngx_http_image_filter_module.c $NGINX_PACKAGE_PATH/src/http/modules \
 	&& cd $NGINX_PACKAGE_PATH \
 	&& ./configure $NGINX_CONFIGURE \
 	&& make \
@@ -100,7 +103,7 @@ RUN echo "begin nginx" \
 	
 RUN mkdir -p /storage/fastdfs
 
-EXPOSE 12041 12050 80
+EXPOSE 23000 22122 80
        
 CMD	sed -i "s/\$NGINX_PORT/$NGINX_PORT/" $NGINX_PATH/conf/nginx.conf ; \
 	nginx ; \
